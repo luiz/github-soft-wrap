@@ -6,8 +6,6 @@ This is a [Greasemonkey](https://addons.mozilla.org/pt-br/firefox/addon/greasemo
 Chrome users
 ------------
 
-Not working currently, but working on it. After fixed:
-
 Download the script, open Google Chrome, open the Extensions page (chrome://extensions) the drag and drop the script into the page. This will install the script without the need of any other extension.
 
 Gotcha
