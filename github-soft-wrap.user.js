@@ -6743,13 +6743,13 @@ return jQuery;
 var jQuery212custom = $.noConflict(true);
 
 (function($) {
-    $("<button>")
+	$("<button>")
 	.addClass("btn btn-sm", "soft-wrap")
 	.text("Soft wrap")
-    .prependTo(".file:has(table) .file-header .file-actions")
+	.prependTo(".file:has(table) .file-header .file-actions")
 	.click(function() {
 		var $this = $(this),
-            $fileContainer = $this.closest(".file");
+			$fileContainer = $this.closest(".file");
 		$fileContainer.find("table").toggleClass("soft-wrap");
 		$this.toggleClass("selected");
 	})
