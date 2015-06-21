@@ -6743,19 +6743,42 @@ return jQuery;
 var jQuery212custom = $.noConflict(true);
 
 (function($) {
+	/**
+	 * Inspect the current `div.file` and return the proper child
+	 * object to which to apply the `soft-wrap` class.
+	 *
+	 * "Prose" documents toggle the .soft-wrap class at the
+	 * `div.file` level, but "code" documents must toggle at
+	 * the `div.file div.data table` level.
+	 */
+	function findWrappable(root) {
+		if (root.is(".file-type-prose")) {
+			return root;
+		} else {
+			return root.find("table");
+		}
+	}
+
+	/**
+	 * Create a new [Soft wrap] button, inject it into every
+	 * `div.file-actions` that isn't Markdown-rendered
+	 * (identified by having a <table>) and mark any `div.file`
+	 * that is already `.soft-wrap`ed as `.selected`.
+	 */
 	$("<button>")
 	.addClass("btn btn-sm", "soft-wrap")
 	.text("Soft wrap")
 	.prependTo(".file:has(table) .file-header .file-actions")
 	.click(function() {
 		var $this = $(this),
-			$fileContainer = $this.closest(".file");
-		$fileContainer.find("table").toggleClass("soft-wrap");
+			$fileContainer = findWrappable($this.closest(".file"));
+
+		$fileContainer.toggleClass("soft-wrap");
 		$this.toggleClass("selected");
 	})
 	.each(function() {
 		var $this = $(this);
-		if ($this.closest(".file").find("table").is(".soft-wrap")) {
+		if (findWrappable($this.closest(".file")).is(".soft-wrap")) {
 			$this.addClass("selected");
 		}
 	});
