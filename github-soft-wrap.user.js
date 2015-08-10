@@ -3,7 +3,8 @@
 // @namespace   http://luiz.github.io
 // @description Adds a button "Soft-wrap" that toggles soft wrap on files and diffs shown on Github
 // @author      https://github.com/luiz
-// @version     1
+// @version     1.1.0
+// @downloadUrl https://github.com/luiz/github-soft-wrap/raw/master/github-soft-wrap.user.js
 // @grant       none
 // @include     https://github.com/*
 // @match       https://github.com/*
