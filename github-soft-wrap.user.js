@@ -2,9 +2,12 @@
 // @name        Github soft-wrap toggler
 // @namespace   http://luiz.github.io
 // @description Adds a button "Soft-wrap" that toggles soft wrap on files and diffs shown on Github
-// @include     https://github.com/*
-// @version     1
+// @author      https://github.com/luiz
+// @version     1.1.0
+// @downloadUrl https://github.com/luiz/github-soft-wrap/raw/master/github-soft-wrap.user.js
 // @grant       none
+// @include     https://github.com/*
+// @match       https://github.com/*
 // ==/UserScript==
 
 /*!
@@ -6741,41 +6744,42 @@ return jQuery;
 var jQuery212custom = $.noConflict(true);
 
 (function($) {
-	function toggleOnDiff(container) {
-		container.toggleClass("soft-wrap");
-	}
-	function toggleOnFile(container) {
-		var $pre = container.find("pre"),
-		$lines = $pre.find(".line");
-		if ($pre.css("white-space") == "pre") {
-			$pre.css("white-space", "pre-wrap");
-			$lines.css("height", "auto");
+	/**
+	 * Inspect the current `div.file` and return the proper child
+	 * object to which to apply the `soft-wrap` class.
+	 *
+	 * "Prose" documents toggle the .soft-wrap class at the
+	 * `div.file` level, but "code" documents must toggle at
+	 * the `div.file div.data table` level.
+	 */
+	function findWrappable(root) {
+		if (root.is(".file-type-prose")) {
+			return root;
 		} else {
-			$pre.css("white-space", "pre");
+			return root.find("table");
 		}
-		$lines.each(function() {
-			var $line = $(this),
-			correspondingSpanId = "#" + $line.attr("id").replace("LC", "L");
-			$(correspondingSpanId).css("height", $line.css("height"));
-		});
 	}
+
+	/**
+	 * Create a new [Soft wrap] button, inject it into every
+	 * `div.file-actions` that isn't Markdown-rendered
+	 * (identified by having a <table>) and mark any `div.file`
+	 * that is already `.soft-wrap`ed as `.selected`.
+	 */
 	$("<button>")
-	.addClass("minibutton", "soft-wrap")
+	.addClass("btn btn-sm", "soft-wrap")
 	.text("Soft wrap")
-	.prependTo(".file:has(.file-code) .actions")
+	.prependTo(".file:has(table) .file-header .file-actions")
 	.click(function() {
 		var $this = $(this),
-		$fileContainer = $this.closest(".file");
-		if ($fileContainer.has("pre").length == 0) {
-			toggleOnDiff($fileContainer);
-		} else {
-			toggleOnFile($fileContainer);
-		}
+			$fileContainer = findWrappable($this.closest(".file"));
+
+		$fileContainer.toggleClass("soft-wrap");
 		$this.toggleClass("selected");
 	})
 	.each(function() {
 		var $this = $(this);
-		if ($this.closest(".file").is(".soft-wrap")) {
+		if (findWrappable($this.closest(".file")).is(".soft-wrap")) {
 			$this.addClass("selected");
 		}
 	});
